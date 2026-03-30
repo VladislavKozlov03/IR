@@ -8,6 +8,33 @@
 #### 2) На нечетных позициях: result -= a[i] + 2 ;
 #### В конце возвращается итоговое значение result.
 
+## Для перевода цикла в SSA форму удобно сначала перевести его в do-while.
+
+    int function2(int * a, int n) {
+        int result = 0;
+        int i = 0;
+
+        if (!(i < n))
+            return result;
+
+        do {
+            int x = 2;
+            int y = 1;
+
+            if (i % 2 == 0) {
+                result += a[i] * x * y;
+            } 
+            else 
+            {
+                result -= a[i] + x * y;
+            }
+
+            i++;
+        } while (i < n);
+
+        return result;
+    }
+
 ## Граф потока управления (control flow graph) CFG :
 
 ![Граф потока управления](1.png)
@@ -33,9 +60,11 @@ $$IDom(bb4) = bb2$$
 
 $$IDom(bb5) = bb2$$
 
-$$IDom(bb6) = bb1$$
+$$IDom(bb6) = bb5$$
 
-$$IDom(Exit) = bb6$$
+$$IDom(bb7) = bb1$$
+
+$$IDom(Exit) = bb7$$
 
 # Дерево доминаторов :
 ![Граф доминаторов](2.png)
@@ -43,15 +72,16 @@ $$IDom(Exit) = bb6$$
 
 ## Граф фронта доминирования для графа G – это граф, в котором вершины совпадают с вершинами G, а направленное ребро от A к B означает, что B входит во фронт доминирования A.
 
-$$DF(bb1) = bb1$$
-
-$$DF(bb2) = bb1$$
-
-$$DF(bb3) = bb5$$
 
 $$DF(bb4) = bb5$$
 
-$$DF(bb5) = bb1$$
+$$DF(bb3) = bb5$$
+
+$$DF(bb5) = bb6$$
+
+$$DF(bb6) = bb2$$
+
+$$DF(bb6) = bb7$$
 
 # Граф фронта доминирования :
 
@@ -74,7 +104,7 @@ $$DF(bb5) = bb1$$
  
 # Оптимизация функции function2 : 
 
-## 1) Constant propagation x * y = 2 * 1 = 2.
+## 1) Constant propagation x * y = 2 * 1 = 2
 ## 2) Loop Unrolling
 
 ## Cокращаем количество условных переходов. 
